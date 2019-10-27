@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.*;
@@ -14,19 +15,19 @@ public class Main {
         Calculation calculationInstance = chooseOperation();
 
 //      Choose Numbers
-        int[] numbers = chooseNumbers();
+        List<Integer> numbers = chooseNumbers();
 
-//        Calculate result
+//      Calculate result
         int result = calculate(calculationInstance, numbers);
 
-//       Print result
+//      Print result
         System.out.println("Result: " + result);
 
     }
 
     //
     private static Calculation chooseOperation() {
-        System.out.println("Choose an operation (+,-,*,/):");
+        System.out.println("Choose an operation (+,-,*):");
         Scanner scanner = new Scanner(System.in);
         String operation = scanner.next();
 
@@ -42,30 +43,25 @@ public class Main {
         }
     }
 
-    private static int[] chooseNumbers() {
-//        ask how many numbers
-        System.out.println("How many numbers will you be using?");
+    private static List<Integer> chooseNumbers() {
+//        Enter numbers
+        System.out.println("Enter a number: ");
         Scanner scanner = new Scanner(System.in);
-        int numberCount = scanner.nextInt();
+        List<Integer> numbers = new ArrayList<>();
 
-//        Read numbers
-        int[] numbers = new int[numberCount];
-        for (int i = 1; i <= numberCount; i++) {
-            System.out.println("Enter number " + i);
-            numbers[ i - 1] = scanner.nextInt();
+        while(scanner.hasNextInt()) {
+            numbers.add(scanner.nextInt());
+            System.out.println("Enter another number or 'done' to end the calculation");
         }
         return numbers;
     }
 
-//    Calculate
-    private static int calculate(Calculation calculation, int[] numbers) {
-        int result = numbers[0];
-        for (int i = 1; i <= numbers.length; i++) {
-            result = calculation.calculate(result, numbers[i-1]);
-        }
-        return result;
+    private static int calculate(Calculation calculation, List<Integer> numbers){
+        return numbers
+                .stream()
+                .reduce((a,b) -> calculation.calculate(a,b))
+                .get();
     }
-
 
 }
 
